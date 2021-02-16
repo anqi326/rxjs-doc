@@ -1,6 +1,7 @@
-#
-# Observable
-## Observable特性
+# rxjs Doc
+rxjs 文档
+## Observable
+### Observable特性
 
 Observable是惰性的,可以同步或者异步返回零个或者多个值的对象
 * 惰性的:   被动的,只有被observer订阅才会执行 
