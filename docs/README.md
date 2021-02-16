@@ -50,7 +50,7 @@ console.log('after');
 //after
 //3
 ```
-## 创建Observable
+### 创建Observable
 * 使用new Observable创建,接受一个参数:subscribe函数
 ```js
 var ob = new Observable(observer => {  
@@ -71,7 +71,7 @@ var ob = new Observable(observer => {  
   * ...
 
 
-## 订阅Observable
+### 订阅Observable
 使用.subscribe订阅observable
 ```js
 observable.subscribe(x => console.log(x));
@@ -80,7 +80,7 @@ subscribe订阅方法和new Observable()中的subscribe回调方法是相同的,
 
 所以 **Observable无法把返回值多播给多个Observer**
 
-## 执行Observable
+### 执行Observable
 
 在Observable被Observer订阅了以后,Observable对象中subscribe回调函数中的代码才会被执行(惰性)
 Observable 执行可以传递三种类型的值：
