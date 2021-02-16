@@ -246,7 +246,7 @@ ReplaySubject可以发送旧值给新的订阅者，但它还可以记录 Observ
 
 > ReplaySubject 记录 Observable 执行中的多个值并将其回放给新的订阅者
 
-#### 指定回放个数
+### 指定回放个数
 当创建 ReplaySubject时，你可以指定回放多少个值：
 ```js
 var subject = new ReplaySubject(3); // 为新的订阅者缓冲3
@@ -269,7 +269,7 @@ subject.next(5);
 //observerA: 5
 //observerB: 5
 ```
-#### 指定回访时长
+### 指定回访时长
 你还可以指定 window time(以毫秒为单位)来确定多久之前的值可以记录。在下面的示例中，我们使用了较大的缓存数量100，但 window time 参数只设置了500毫秒。
 ```js
 
