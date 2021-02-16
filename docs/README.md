@@ -1,6 +1,8 @@
 # rxjs Doc
 rxjs 文档
+
 ## Observable
+
 ### Observable特性
 
 Observable是惰性的,可以同步或者异步返回零个或者多个值的对象
@@ -103,7 +105,7 @@ var ob = new Observable(observer => {  
 })
 ```
 
-## 清理Observable
+### 清理Observable
 
 当我们调用`observable.subscribe`并且Observer在接受完值以后希望终止Observable执行,以避免浪费资源,可以调用`unsubscribe()` 取消执行
 ```js
@@ -124,7 +126,7 @@ var observable = new Observable(observer=> {
 });
 ```
 
-# Observer
+## Observer
 Observer是Observable发出的值的消费者,  他作为Observable.subscribe()方法参数的一组回调函数集合
 包含三种回调函数next,error,complete
 ```js
@@ -155,7 +157,7 @@ observable.subscribe(  
 );
 ```
 
-# Subscription
+## Subscription
 Subscription 是表示可清理资源的对象，通常是 Observable 的执行observable.subscribe(...)
 
 > Subscription 基本上只有一个 unsubscribe() 函数，这个函数用来释放资源或去取消 Observable 执行。
@@ -179,7 +181,7 @@ setTimeout(() => subscr1$.unsubscribe(), 5000);
 ```
 subscriptions 还有一个 remove(otherSubscription)方法，用来撤销一个已添加的子 Subscription
 
-# Subject
+## Subject
 Subject 是一种特殊类型的 Observable，它允许将值多播给多个观察者，所以 Subject 是多播的，而普通的 Observables 是单播的(每个已订阅的观察者都拥有 Observable 的独立执行)
 
 > Subject 像是 Observable，但是可以多播给多个观察者。Subject 还像是 EventEmitters，维护着多个监听器的注册表。
@@ -217,7 +219,7 @@ ob.subscribe(subject);
 2. subject作为Observable又把值发送给了订阅他的两个Observer
 3. 这两个Observer执行内部next回调函数,也就是console.log方法
 
-# BehaviorSubject
+## BehaviorSubject
 它保存了发送给消费者的最新值。并且当有新的观察者订阅时，会立即从 BehaviorSubject 那接收到“当前值”
 > BehaviorSubjects 适合用来表示“随时间推移的值”。举例来说，生日的流是一个 Subject，但年龄的流应该是一个 BehaviorSubject 。
 
@@ -238,13 +240,13 @@ subject.next(3);
 //observerB: 3
 ```
 
-# ReplaySubject
+## ReplaySubject
 
 ReplaySubject可以发送旧值给新的订阅者，但它还可以记录 Observable 执行的一部分。
 
 > ReplaySubject 记录 Observable 执行中的多个值并将其回放给新的订阅者
 
-## 指定回放个数
+#### 指定回放个数
 当创建 ReplaySubject时，你可以指定回放多少个值：
 ```js
 var subject = new ReplaySubject(3); // 为新的订阅者缓冲3
@@ -267,7 +269,7 @@ subject.next(5);
 //observerA: 5
 //observerB: 5
 ```
-## 指定回访时长
+#### 指定回访时长
 你还可以指定 window time(以毫秒为单位)来确定多久之前的值可以记录。在下面的示例中，我们使用了较大的缓存数量100，但 window time 参数只设置了500毫秒。
 ```js
 
@@ -294,7 +296,7 @@ observerB:6
   ...
 ```
 
-# AsyncSubject
+## AsyncSubject
 只有当 Observable 执行完成时(执行 complete())，它才会将执行的最后一个值发出
 ```js
 var subject = new AsyncSubject();
@@ -314,10 +316,10 @@ observerB:5
 ```
 AsyncSubject 和 last()操作符类似，因为它也是等待 complete 通知，以发送一个单个值。
 
-# Operator
-## Create Operator
+## Operator
+### Create Operator
 
-### from
+#### from
 
 把数组对象转为Observable,数组每一个item值分别发送
 
@@ -329,7 +331,7 @@ const from$ = from(['a', 'b', 'c']).subscribe(x => console.log(x));
 //b
 //c
 ```
-### fromEvent
+#### fromEvent
 把Event转为Observable
 
 <img src="rxjs_files/Image [1].png" type="image/png" data-filename="Image.png" width="600px">
@@ -340,7 +342,7 @@ const btn$ = fromEvent(btn, 'click');
 btn$.subscribe(x => console.log(x));
 ```
 
-### of
+#### of
 把输入参数转为Observable
 
 <img src="rxjs_files/Image [2].png" type="image/png" data-filename="Image.png" width="600px">
@@ -356,7 +358,7 @@ ob$.subscribe(x => console.log(x));
 const of$ = of(['a', 'b', 'c']).subscribe(x => console.log(x))
 //["a","b","c"]
 ```
-### interval
+#### interval
 
 在指定的时间间隔发出连续的数字
 
@@ -376,7 +378,7 @@ takeFourNumbers.subscribe(x => console.log('Next: ', x));
 // Next: 3
 ```
 
-### range
+#### range
 
 在指定的数字范围内发出连续的数字
 
@@ -385,7 +387,7 @@ takeFourNumbers.subscribe(x => console.log('Next: ', x));
 ```js
 const rang$ = range(2, 5).subscribe(x => console.log(x))
 ```
-### timer
+#### timer
 
 在初始延时（initialDelay）之后开始发送并且在每个时间周期（ period）后发出自增的数字。
 
@@ -397,9 +399,9 @@ const rang$ = range(2, 5).subscribe(x => console.log(x))
 const timer$ = timer(2000, 5000).subscribe(x => console.log(x))
 ```
 
-## Transform Operator
+### Transform Operator
 
-### map
+#### map
 
 可以对Observable发出的每个值进行转换处理并且发出值
 
@@ -410,7 +412,7 @@ from([1, 2, 3]).pipe(  
   map(x => 'value= ' + x)
 ).subscribe(x => console.log(x))
 ```
-### mapTo
+#### mapTo
 
 类似于 map，但它每一次都把源值映射成同一个常量输出值
 
@@ -421,7 +423,7 @@ const mapTo$ = from(['a', 'b', 'c']).pipe(
 //3* Hi
 ```
 
-### pluck
+#### pluck
 
 可以获取Observable对象的某一个属性,并发出值
 
@@ -442,7 +444,7 @@ from( [
 //name is cc
 ```
 
-### groupBy
+#### groupBy
 
 根据指定条件将源 Observable 发出的值进行分组，并将这些分组作为 GroupedObservables发出，每一个分组都是一个 GroupedObservable。
 
@@ -495,7 +497,7 @@ of(
 // ["3", "TSLint"]
 ```
 
-### switchMap
+#### switchMap
 
 将每个源值投射成 Observable，该 Observable 会合并到输出 Observable 中， 并且只发出最新投射的 Observable 中的值。
 
@@ -518,7 +520,7 @@ const swtichMap$ = of(1, 2, 3).pipe(
 //..
 ```
 
-### mergeMap
+#### mergeMap
 
 将每个源值投射成 Observable ，该 Observable 会合并到输出 Observable 中。
 
@@ -552,7 +554,7 @@ const first$ = high$.pipe(
 ).subscribe(x => console.log(x));
 ```
 
-### concatMap
+#### concatMap
 
 将源值投射为一个合并到输出 Observable 的 Observable,以串行的方式等待前一个完成再合并下一个 Observable。
 
@@ -576,9 +578,9 @@ const concatMap$ = fromEvent(document, 'click').pipe(
 //最后发出最后一次click的内部值
 //0,1,2,3
 ```
-## Filter Operator
+### Filter Operator
 
-### take
+#### take
 
 只发出源 Observable 最初发出的的N个值 (N = count),然后它便完成(执行complete回调)，无论源 Observable 是否完成
 
@@ -602,7 +604,7 @@ ob$.subscribe({  
 //complete
 ```
 
-### takeUntil
+#### takeUntil
 
 它发出源 Observable 的值，然后直到第二个 Observable (即 notifier )发出值或者complete，它便完成
 
@@ -619,7 +621,7 @@ interval(1000).pipe(
 //complete
 ```
 
-### debounceTime
+#### debounceTime
 
 只有在特定的一段时间经过后并且没有发出另一个源值发出，才从源 Observable 中发出一个值。
 
@@ -636,7 +638,7 @@ const input$ = fromEvent(input, 'keyup').pipe(  
 ).subscribe(x => console.log(x.target.value))
 ```
 
-### debounce
+#### debounce
 
 只有在另一个Observable发出值(不是complete),并且当前Observable没有发出另一个原值后,才从源 Observable 中发出一个值。
 
@@ -661,7 +663,7 @@ const input$ = fromEvent(input, 'keyup').pipe(  
 ).subscribe(x => console.log(x.target.value))
 ```
 
-### distinct
+#### distinct
 
 返回 Observable，它发出由源 Observable 所发出的所有与之前的项都不相同的项。
 
@@ -690,7 +692,7 @@ const arr$ = of( 
 //{ age: 7, name: 'Bar' }
 ```
 
-### distinctUntilChanged
+#### distinctUntilChanged
 
 distinctUntilChanged返回 Observable，它发出源 Observable 发出的所有与前一项不相同的项。如果提供了 compare 函数，那么每一项都会调用它来检验是否应该发出这个值。
 如果没有提供 compare 函数，默认使用相等检查。
@@ -720,7 +722,7 @@ of<Person>( { age: 4, name: 'Foo'}, { age: 7, name: 'Bar'}, { age: 5, name: 'Foo
 // { age: 4, name: 'Foo' } // { age: 7, name: 'Bar' } // { age: 5, name: 'Foo' }
 ```
 
-### filter
+#### filter
 
 只发送源Observable中满足predicate函   数的item来进行过滤
 
@@ -733,7 +735,7 @@ const clicksOnDivs = clicks.pipe(filter(ev => ev.target.tagName === 'DIV'));
 clicksOnDivs.subscribe(x => console.log(x));
 ```
 
-### first
+#### first
 
 只发出由源Observable所发出的值中第一个(或第一个满足条件的值),发出值后subscribe结束
 
@@ -759,7 +761,7 @@ const clicksOnDivs = clicks.pipe(  
 clicksOnDivs.subscribe(x => console.log(x));
 ```
 
-### last
+#### last
 
 与first相反
 
@@ -776,7 +778,7 @@ const click$ = of(1, 2, 3, 4).pipe(  
 //subscription complete
 ```
 
-### skip
+#### skip
 
 返回一个 Observable， 该 Observable 跳过源 Observable 发出的前N个值(N = count)。
 
@@ -794,7 +796,7 @@ const click$ = of(1, 2, 3, 4).pipe( 
 //subscription complete
 ```
 
-### skipLast
+#### skipLast
 
 该 Observable 累积足够长的队列以存储最初的N个值 (N = count)。 当接收到更多值时，将从队列的前面取值并在结果序列上产生。 这种情况下值会被延时。
 
@@ -810,7 +812,7 @@ const click$ = of(1, 2, 3, 4, 5).pipe( 
 //subscription complete
 ```
 
-### skipUntil
+#### skipUntil
 
 Observable 会跳过源 Observable 发出的值直到第二个 Observable 开始发送
 
@@ -826,7 +828,7 @@ clicksOnDivs.subscribe(x => console.log(x));
 //直到5秒后, observable才会发出click事件
 ```
 
-### skipWhile
+#### skipWhile
 
 Observable 会跳过由源 Observable 发出的所有满足指定条件的数据项， 但是一旦出现了不满足条件的项，则发出在此之后的所有项。
 
@@ -843,7 +845,7 @@ const skipWhile$ = of(1, 2, 3, 4, 5).pipe(
 //5
 ```
 
-### sample
+#### sample
 
 当另一个 notifier Observable发出值时, 发出源 Observable 最新发出的值.
 
@@ -862,7 +864,7 @@ var sub = click$.subscribe({
 });
 ```
 
-### sampleTime
+#### sampleTime
 
 在周期时间间隔内取样源 Observable ， 发出最新值。
 
@@ -880,7 +882,7 @@ var sub = click$.subscribe({
 });
 ```
 
-### throttleTime
+#### throttleTime
 
 <img src="rxjs_files/Image [24].png" type="image/png" data-filename="Image.png" width="600px">
 
@@ -896,7 +898,7 @@ var sub = click$.subscribe({
 });
 ```
 
-### throttle
+#### throttle
 
 从源 Observable 中发出一个值，然后在由另一个 Observable 决定的期间内忽略随后发出的源值，然后重复此过程。
 
@@ -916,9 +918,9 @@ var sub = click$.subscribe({
 }); 
 ```
 
-## Combine Operator
+### Combine Operator
 
-### merge
+#### merge
 
 创建一个输出 Observable ，它可以同时发出输入的Observable发出的所有值. 只有所有的内部Observable 都完成了，输出 Observable 才能完成
 
@@ -942,7 +944,7 @@ var sub = ob$.subscribe({
 //3
 ```
 
-### mergeAll
+#### mergeAll
 
 将高阶 Observable 转换成一阶 Observable ，一阶 Observable 会同时发出在内部 Observables 上发出的所有值
 
@@ -988,7 +990,7 @@ var sub = firstOrder$.subscribe({
 //2
 ```
 
-### concatAll
+#### concatAll
 
 通过顺序地连接内部 Observable，将高阶 Observable 转化为一阶 Observable并且串行得发出每个值
 
@@ -1021,7 +1023,7 @@ const highOrder$ = click$.pipe(
 //3
 ```
 
-### forkJoin
+#### forkJoin
 
 接收 输入Observable数组或者是Observable字典, 会返回一个Observable,
 这个Observable会等待Array或者Dictionary中所有Observable元素结束,并且会按照Array或者Dictionary中的元素顺序发出所有Observable的**最后一个值**.
@@ -1041,9 +1043,9 @@ const forkJoin$ = forkJoin(
 //[0,4,8]
 ```
 
-## Condition Operator
+### Condition Operator
 
-### every
+#### every
 
 返回布尔型的Observable, 判断源Observable是否满足条件
 
@@ -1054,7 +1056,7 @@ const every$ = of(1, 2, 3, 4, 5).pipe(
 //返回false
 ```
 
-### find
+#### find
 
 只发出源 Observable 所发出的值中第一个满足条件的值。
 
@@ -1070,7 +1072,7 @@ const find$ = of(1, 2, 3, 4, 5).pipe(
 //4
 ```
 
-### findIndex
+#### findIndex
 
 只发出源 Observable 所发出的值中第一个满足条件的值的索引。
 
@@ -1083,7 +1085,7 @@ const every$ = of(1, 2, 3, 4, 5).pipe(
 //3
 ```
 
-### isEmpty
+#### isEmpty
 
 如果源 Observable 是空的话，它返回一个发出 true 的 Observable，否则发出 false
 
@@ -1097,9 +1099,9 @@ const empty$ = of().pipe(
 //true
 ```
 
-## Math Operator
+### Math Operator
 
-### count
+#### count
 
 计算源的发送数量，并当源完成时发出该数值。
 
@@ -1121,7 +1123,7 @@ const empty$ = of(1, 2, 3).pipe(
 //complete
 ```
 
-### max
+#### max
 
 * 对于数值类型的源Observable, max函数可以直接进行比较
 
@@ -1148,10 +1150,10 @@ const max$ = of(
 //{name:"bb",age:15}
 ```
 
-### min
+#### min
 与max相反
 
-### reduce
+#### reduce
 
 在源 Observalbe 上应用 accumulator (累加器) 函数，然后当源 Observable 完成时，返回 累加的结果，可以提供一个可选的 seed 值。
 
@@ -1174,9 +1176,9 @@ const reduce$ = one$.pipe(
 //输出5秒内click次数
 ```
 
-## Tool Operator
+### Tool Operator
 
-### tap
+#### tap
 
 拦截源 Observable 上的每次发送并且运行一个函数，但返回的输出 Observable 与 源 Observable 是相同的，只要不发生错误即可
 
@@ -1191,7 +1193,7 @@ const click$ = fromEvent(document, 'click').pipe(
 //469
 ```
 
-### delay
+#### delay
 
 通过给定的超时或者直到一个给定的时间来延迟源 Observable 的发送。
 
@@ -1221,9 +1223,9 @@ fromEvent(document, 'click').pipe(
 //直到5秒后的时间才发出值
 ```
 
-## Error Operator
+### Error Operator
 
-### catchError
+#### catchError
 
 捕获 observable 中的错误，可以通过返回一个新的 observable 或者抛出错误对象来处理。
 
@@ -1287,7 +1289,7 @@ const error$ = of(1, 2, 3, 4).pipe(
 //Uncaught error: error message
 ```
 
-### retry
+#### retry
 
 返回一个 Observable， 该 Observable 是源 Observable 不包含错误异常的镜像。 如果源 Observable 发生错误, 这个方法不会传播错误而是会不 断的重新订阅源 Observable 直到达到最大重试次数 (由数字参数指定)。
 
@@ -1311,7 +1313,7 @@ const error$ = of(1, 2, 3, 4).pipe(
 //Uncaught error: error message
 ```
 
-### retryWhen
+#### retryWhen
 
 接收一个notifier Observable参数,
 返回一个 Observable， 该 Observable 是源 Observable 不包含错误异常的镜像。 如果源头 Observable 触发 
